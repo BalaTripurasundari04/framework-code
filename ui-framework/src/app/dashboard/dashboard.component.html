@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightweight HRMS</title>
+    <link rel="stylesheet" href="dashboard.component.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo">
+            <img src="../../assets/lojk.png" alt="Logo">
+        </div>
+        <div class="dashboard-title">Dashboard</div>
+        <button class="logout-button" (click) = "logout()" >Logout</button>
+    </div>
+    <main>
+        <section class="section1">
+            <h1>Attendance</h1>
+            <div class="digitalClock">
+                <div class="digitalTime">
+                    <div>{{hour}} : &nbsp;</div>
+                    <div>{{minute}} : &nbsp;</div>
+                    <div>{{second}}  &nbsp;</div>
+                    <div class="ampm">{{ampm}}</div>
+                </div>
+            </div>
+            <button type="submit" (click)="clockIn()" [disabled]="!clockInEnabled"  class="clockin">Clockin</button>
+            <button type="submit" (click)="clockOut()" [disabled]="!clockOutEnabled"  class="clockout">Clockout</button>
+            <div class="overlay1" *ngIf = "showpop">
+                <div class="content1">
+                    <h1>Successfully Clocked Out</h1>
+                    <p *ngIf="clockInDateTime"> {{ clockInDateTime }}</p>
+                    <button class="ok" (click) = "close()">OK</button>
+                </div>
+            </div>
+            <div class="overlay2" *ngIf = "showpopup">
+                <div class="content2">
+                    <h1>Successfully Clocked Out</h1>
+                    <p *ngIf="clockOutDateTime">{{ clockOutDateTime }}</p>
+                    <button class="ok" (click) = "closepopup()" >OK</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section2">
+            
+            <div class="user1">
+                <p > Employee Name : {{employee.employee_name}} </p>
+                <p > Employee ID : {{employee.employee_id}} </p>
+                <p>Role : {{employee.role}}</p>
+            
+            </div>
+            <div class="user2" style="margin-right: 50px;">
+                <img src="../../assets/profile/{{employee.employee_id}}.jpg" alt="" height="200px" width="170px">
+                
+            </div>
+        </section>
+
+        <section class="section3" >
+            <h1>Calendar</h1>
+                <mat-calendar></mat-calendar>
+        </section>
+
+        <section class="section4">
+            <h1>Report</h1>
+            <div >
+                <table class="table1">
+                    <thead >
+                      <tr>
+                        <th> Employee ID  </th>
+                        <th> Clock In Time  </th>
+                        <th> Clock Out Time  </th>
+                        <th> Date  </th>
+                      </tr>
+                    </thead>
+                    <tbody >
+                      <tr >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr >
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="employee.role === 'Employee'">
+                <select name="Month" id="month" class="drop" style="margin-left: 70px;">
+                    <option value="None" selected>None</option>
+                    <option value="Jan">Jan</option>
+                    <option value="Feb">Feb</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="Aug">Aug</option>
+                    <option value="Sep">Sep</option>
+                    <option value="Oct">Oct</option>
+                    <option value="Nov">Nov</option>
+                    <option value="Dec">Dec</option>
+                </select>
+                <button class="sub" (click) = "openpop()"  >View</button>
+              </div>
+              
+              <div *ngIf="employee.role === 'Admin'">
+                <input type="text" class="search"  placeholder=" Search Employee ID ">
+                <select name="Month" id="month" class="drop">
+                    <option value="None" selected>None</option>
+                    <option value="Jan">Jan</option>
+                    <option value="Feb">Feb</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="Aug">Aug</option>
+                    <option value="Sep">Sep</option>
+                    <option value="Oct">Oct</option>
+                    <option value="Nov">Nov</option>
+                    <option value="Dec">Dec</option>
+                </select>
+                <button class="sub" (click) = "openpop()"  >View</button>
+              </div>
+            <div class="overlay" *ngIf = "show">
+                <div class="content" >
+                    <div class="close" (click) = "closepop()">
+                         &times;
+                    </div>
+                    <div class="bt1">
+                        <button class="print">Print</button>
+                        <button class="download">Download</button>
+                    </div>
+                    <div class="table" style="border-collapse: collapse;">
+                        <table >
+                            <thead >
+                              <tr>
+                                <th>   Employee ID   </th>
+                                <th>   Clock In Time   </th>
+                                <th>   Clock Out Time   </th>
+                                <th>   Date   </th>
+                                <th>   Month   </th>
+                                <th>   Year   </th>
+                                <th>   Hours Worked   </th>
+                                <th>   Day Status   </th>
+                              </tr>
+                            </thead>
+                            <tbody >
+                              <tr >
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section5">
+            <h1>Attendance</h1>
+            <select name="Month" id="month" class="drop1" >
+                <option value="None" selected>None</option>
+                <option value="Jan">Jan</option>
+                <option value="Feb">Feb</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="Aug">Aug</option>
+                <option value="Sep">Sep</option>
+                <option value="Oct">Oct</option>
+                <option value="Nov">Nov</option>
+                <option value="Dec">Dec</option>
+            </select>
+            <div class="piechart">
+                <apx-chart
+                    [series]="chartSeries"
+                    [chart]="chartDetails"
+                    [labels]="chartLabels"
+                    [dataLabels]="chartDataLabels"
+                style="z-index: 0;"></apx-chart>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

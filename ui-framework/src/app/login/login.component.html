@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.component.css">
+    <title>Lightweight HRMS</title>
+</head>
+<body>
+    <div class="parent clearfix">
+        <div class="bg-illustration">
+            <div class="logo-container">
+                <img src="../../assets/lojk.png" alt="logo">
+
+            </div>
+          
+    
+          <div class="burger-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+    
+        </div>
+        
+        <div class="login">
+          <div class="container">
+            
+              <h1>Login  </h1>
+            
+              
+              <div class="login-form" >
+                <div class="error-message" *ngIf="loginError" style="font-size: 20px; color: red; margin-left: 170px;">{{ loginError }}</div>
+                <form >
+                  <input name="employee_email" [(ngModel)]="loginObj.employee_email"  type="email" placeholder="E-mail Address">
+                   <input name="password" [(ngModel)]="loginObj.password" type="password" placeholder="Password">
+      
+                  <div class="remember-form">
+                    <input type="checkbox">
+                    <span>Remember me</span>
+                  </div>
+                   <button (click)="onLogin()" class="btn" [disabled]="!loginObj.employee_email || !loginObj.password " >LOG-IN</button> 
+                  
+      
+                </form>
+              </div>
+        
+          </div>
+          </div>
+      </div>
+</body>
+</html>
