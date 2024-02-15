@@ -30,14 +30,16 @@
             <div class="overlay1" *ngIf = "showpop">
                 <div class="content1">
                     <h1>Successfully Clocked Out</h1>
-                    <p *ngIf="clockInDateTime"> {{ clockInDateTime }}</p>
+                    <p *ngIf="clockInDate" > {{ clockInDate| date:'yyyy-MM-dd' }}</p> 
+                    <p *ngIf="clockInTime" > {{ clockInTime}} </p>
                     <button class="ok" (click) = "close()">OK</button>
                 </div>
             </div>
             <div class="overlay2" *ngIf = "showpopup">
                 <div class="content2">
                     <h1>Successfully Clocked Out</h1>
-                    <p *ngIf="clockOutDateTime">{{ clockOutDateTime }}</p>
+                    <p *ngIf="clockOutDate" > {{ clockOutDate| date:'yyyy-MM-dd' }}</p>
+                    <p *ngIf="clockOutTime" > {{ clockOutTime}} </p>
                     <button class="ok" (click) = "closepopup()" >OK</button>
                 </div>
             </div>
@@ -166,7 +168,7 @@
                                 <th>   Month   </th>
                                 <th>   Year   </th>
                                 <th>   Hours Worked   </th>
-                                <th>   Day Status   </th>
+                                <th>   Status   </th>
                               </tr>
                             </thead>
                             <tbody >

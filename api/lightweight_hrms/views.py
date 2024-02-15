@@ -1,3 +1,4 @@
+import jwt, datetime
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import EmployeeSerializer, AttendanceSerializer
@@ -5,8 +6,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .models import Employee,Attendance
 from rest_framework import status
-import jwt, datetime
-from datetime import datetime, time
+from datetime import datetime as dt
 
 class register_api(APIView):
     def post(self, request):
@@ -108,8 +108,8 @@ class clockout_api(APIView):
             clockin_record = Attendance.objects.get(employee_id=employee_id, clockin_date=clockout_date)
         except Attendance.DoesNotExist:
             return Response({"error": "Clock-in record not found for the specified date and employee"})
-        clockin_datetime = datetime.combine(clockin_record.clockin_date, clockin_record.clockin_time)
-        clockout_datetime = datetime.combine(clockout_date, clockout_time)
+        clockin_datetime = dt.combine(clockin_record.clockin_date, clockin_record.clockin_time)
+        clockout_datetime = dt.combine(clockout_date, clockout_time)
         hours_worked_timedelta = clockout_datetime - clockin_datetime
         hours_worked_seconds = int(hours_worked_timedelta.total_seconds())
         hours, remainder = divmod(hours_worked_seconds, 3600)
@@ -131,9 +131,16 @@ class clockout_api(APIView):
     
 
 class attendance_api(APIView):
-    def get(self, request):
-        attendance_records = Attendance.objects.all()
+    def get(self, request, employee_id=None, month=None):
+        month = request.GET.get('month', None)
+        if employee_id:
+            attendance_records = Attendance.objects.filter(employee_id=employee_id)
+        elif month:
+            attendance_records = Attendance.objects.filter(month=month)
+        else:
+            attendance_records = Attendance.objects.all()
         serializer = AttendanceSerializer(attendance_records, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 

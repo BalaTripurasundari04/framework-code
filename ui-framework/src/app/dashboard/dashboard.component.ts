@@ -11,14 +11,21 @@ import {
   ApexTitleSubtitle
 } from "ng-apexcharts";
 
-
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
+
 export class DashboardComponent implements OnInit {
+
+  clockinoutObj: any = {
+    "clockin_time": "",
+    "clockout_time": "",
+    "clockin_date": "",
+    "clockout_date": "",
+    "employee_id": "",
+  };
 
   chartSeries: ApexNonAxisChartSeries = [20, 5, 25];
 
@@ -30,17 +37,21 @@ export class DashboardComponent implements OnInit {
   chartDataLabels: ApexDataLabels = {
     enabled: true
   };
+
   clockInEnabled: boolean = true;
   clockOutEnabled: boolean = false;
-  clockInDateTime: string | null = null;
-  clockOutDateTime: string | null = null;
+  clockInDate : string | null = null;
+  clockOutDate : string | null = null;
+  clockInTime : string | null = null;
+  clockOutTime : string | null = null;
   showpop = false;
   showpopup = false;
   employee: any;
   
   clockIn() {
     const currentDate = new Date();
-    this.clockInDateTime = currentDate.toLocaleString();
+    this.clockInDate = currentDate.toISOString().split('T')[0];
+    this.clockInTime = currentDate.toLocaleTimeString('en-US', {hour12:false});
     this.clockInEnabled = false;
     this.clockOutEnabled = true;
     this.showpop = true;
@@ -49,7 +60,8 @@ export class DashboardComponent implements OnInit {
 
   clockOut() {
     const currentDate = new Date();
-    this.clockOutDateTime = currentDate.toLocaleString();
+    this.clockOutDate = currentDate.toISOString().split('T')[0];
+    this.clockOutTime = currentDate.toLocaleTimeString('en-US', {hour12:false});
     this.clockInEnabled = true;
     this.clockOutEnabled = false;
     this.showpopup = true;
@@ -58,10 +70,26 @@ export class DashboardComponent implements OnInit {
 
   close (){
     this.showpop = false;
+    const data = {
+      employee_id: this.employee.employee_id,
+      clockin_date: this.clockInDate,
+      clockin_time: this.clockInTime,
+    }
+    this.http.post('http://localhost:8080/api/clockin',data).subscribe((response)=>{
+
+    });
   }
 
   closepopup () {
     this.showpopup = false;
+    const data = {
+      employee_id: this.employee.employee_id,
+      clockout_date: this.clockOutDate,
+      clockout_time: this.clockOutTime,
+    }
+    this.http.post('http://localhost:8080/api/clockout',data).subscribe((response)=>{
+
+    });
   }
 
   show = false;
