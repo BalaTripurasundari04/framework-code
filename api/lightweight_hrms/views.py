@@ -1,4 +1,5 @@
 import jwt, datetime
+from django.db.models import Q
 from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import EmployeeSerializer, AttendanceSerializer
@@ -116,31 +117,41 @@ class clockout_api(APIView):
         minutes, seconds = divmod(remainder, 60)
         hours_worked_formatted = "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
         serializer.validated_data['hour_worked'] = hours_worked_formatted
-        if clockout_time.hour < 17 :
-            status_value = 'early departure'
-        elif clockout_time.hour > 19 or not clockin_record.clockout_time:
-            status_value = 'overtime'
+        status_values = [clockin_record.status]
+        if 17 <= clockout_time.hour < 19 :
+            status_values.append('')
+        elif clockout_time.hour < 17 :
+            status_values.append('Early Departure')
+        elif clockout_time.hour >= 19 or not clockin_record.clockout_time:
+            status_values.append('Overtime')
         else:
-            status_value = ''
-        serializer.validated_data['status'] = status_value
+            status_values = ''
+        serializer.validated_data['status'] = ', '.join(status_values)
         clockin_record.clockout_time = clockout_time
         clockin_record.hour_worked = hours_worked_formatted
-        clockin_record.status = status_value
+        clockin_record.status = status_values
         clockin_record.save()
         return Response(serializer.data)
     
 
 class attendance_api(APIView):
     def get(self, request, employee_id=None, month=None):
-        month = request.GET.get('month', None)
-        if employee_id:
-            attendance_records = Attendance.objects.filter(employee_id=employee_id)
-        elif month:
-            attendance_records = Attendance.objects.filter(month=month)
-        else:
-            attendance_records = Attendance.objects.all()
+        employee_id = request.query_params.get('employee_id')
+        month = request.query_params.get('month')
+
+        attendance_records = Attendance.objects.all()
+
+        filter_conditions = Q()
+
+        if employee_id is not None:
+            filter_conditions &= Q(employee_id=employee_id)
+
+        if month is not None:
+            filter_conditions &= Q(month=month)
+
+        attendance_records = attendance_records.filter(filter_conditions).order_by('clockin_date')
+
         serializer = AttendanceSerializer(attendance_records, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 

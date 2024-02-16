@@ -7,6 +7,4 @@ urlpatterns = [
     path('clockin', clockin_api.as_view()),
     path('clockout', clockout_api.as_view()),
     path('attendance/', attendance_api.as_view()),
-    path('attendance/<int:employee_id>/', attendance_api.as_view()),
-    path('attendance/<int:employee_id>/<str:month>', attendance_api.as_view()),
 ]

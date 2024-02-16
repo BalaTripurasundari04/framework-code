@@ -19,13 +19,9 @@ import {
 
 export class DashboardComponent implements OnInit {
 
-  clockinoutObj: any = {
-    "clockin_time": "",
-    "clockout_time": "",
-    "clockin_date": "",
-    "clockout_date": "",
-    "employee_id": "",
-  };
+  attendanceData: any[] = [];
+  employee_id: string = '';
+  Month: string = '';
 
   chartSeries: ApexNonAxisChartSeries = [20, 5, 25];
 
@@ -96,6 +92,7 @@ export class DashboardComponent implements OnInit {
 
   openpop () {
     this.show=true;
+    this.loadAttendanceData();
   }
 
   closepop () {
@@ -147,5 +144,13 @@ export class DashboardComponent implements OnInit {
     });
   }
   
-  
+  loadAttendanceData() {
+    // Customize this URL according to your backend API
+    const url = 'http://localhost:8080/api/attendance/?employee_id=${this.employee_id}&month=${this.Month}';
+    
+    this.http.get<any[]>(url)
+      .subscribe(data => {
+        this.attendanceData = data;
+      });
+  }
 }

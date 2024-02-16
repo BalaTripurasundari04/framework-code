@@ -111,7 +111,7 @@
                 </table>
             </div>
             <div *ngIf="employee.role === 'Employee'">
-                <select name="Month" id="month" class="drop" style="margin-left: 70px;">
+                <select name="Month" id="month" [(ngModel)]="Month" class="drop" style="margin-left: 70px;">
                     <option value="None" selected>None</option>
                     <option value="Jan">Jan</option>
                     <option value="Feb">Feb</option>
@@ -130,21 +130,21 @@
               </div>
               
               <div *ngIf="employee.role === 'Admin'">
-                <input type="text" class="search"  placeholder=" Search Employee ID ">
-                <select name="Month" id="month" class="drop">
+                <input type="text" class="search" [(ngModel)]="employee_id" placeholder=" Search Employee ID ">
+                <select name="Month" [(ngModel)]="Month" id="month" class="drop">
                     <option value="None" selected>None</option>
-                    <option value="Jan">Jan</option>
-                    <option value="Feb">Feb</option>
+                    <option value="January">Jan</option>
+                    <option value="February">Feb</option>
                     <option value="March">March</option>
                     <option value="April">April</option>
                     <option value="May">May</option>
                     <option value="June">June</option>
                     <option value="July">July</option>
-                    <option value="Aug">Aug</option>
-                    <option value="Sep">Sep</option>
-                    <option value="Oct">Oct</option>
-                    <option value="Nov">Nov</option>
-                    <option value="Dec">Dec</option>
+                    <option value="August">Aug</option>
+                    <option value="September">Sep</option>
+                    <option value="October">Oct</option>
+                    <option value="November">Nov</option>
+                    <option value="December">Dec</option>
                 </select>
                 <button class="sub" (click) = "openpop()"  >View</button>
               </div>
@@ -172,15 +172,15 @@
                               </tr>
                             </thead>
                             <tbody >
-                              <tr >
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                              <tr *ngFor="let record of attendanceData">
+                                <td>{{record.employee_id}}</td>
+                                <td>{{record.clockin_time}}</td>
+                                <td>{{record.clockout_time}}</td>
+                                <td>{{record.clockin_date}}</td>
+                                <td>{{record.month}}</td>
+                                <td>{{record.year}}</td>
+                                <td>{{record.hour_worked}}</td>
+                                <td>{{record.status}}</td>
                               </tr>
                             </tbody>
                         </table>

@@ -38,8 +38,8 @@ class Attendance(models.Model):
     month = models.CharField(null=True, blank=True, max_length=20 )
     year = models.IntegerField(null=True, blank=True)
     hour_worked = models.CharField(max_length=20, default='00:00:00')
-    day_present = models.BooleanField(default=0)  
-    leave = models.BooleanField(default=1)  
+    day_present = models.IntegerField(default=0)  
+    leave = models.IntegerField(default=1) 
     status = models.CharField(max_length=20, default='')
 
 
